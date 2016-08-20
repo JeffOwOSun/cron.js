@@ -22,6 +22,14 @@
  */
 
 /**
+ * helper function: increment the given time by one minute
+ */
+function incrementMinute(date) {
+  return new Date(date.getTime() + 60000);
+}
+
+
+/**
  * @class TimeGroup a group of crontime rules
  * @param rules {Array} an array of timeslot rules
  * [
@@ -31,7 +39,18 @@
  *   { 'rule': '* * * * * *', 'type': '-' },
  * ]
  */
+var exampleRules = [
+  { rule: '00 30 22 * * *', 'type': '+' },
+  { rule: '00 30 11 * * 2-6', 'type': '+' },
+  { rule: '00 00 12 * * 2-6', 'type': '+' },
+  { rule: '* * * * * 5', 'type': '-' }, //thursday rest
+]
+var exampleStart = new Date();
+var exampleStop = new Date(exampleStart.getTime()+5*24*3600*1000);
 function TimeGroup(rules) {
+    if (!(this instanceof TimeGroup)) {
+        return new TimeGroup(rules);
+    }
     this.rules = rules;
     this.cronTimes = rules.map(function(rule) {
         return {
@@ -42,9 +61,50 @@ function TimeGroup(rules) {
 }
 
 TimeGroup.prototype = {
-    nextTick: function nextTick(now) {
+    //given a time object now, return the next timeslot that satisfies the
+    //constraints
+    nextTick: function nextTick(startTime, stopTime) {
+      var next = new Date(startTime),
+          i;
+      //zero out the seconds
+      next.setSeconds(0);
+      for (; next < stopTime; next = incrementMinute(next)) {
+        if (next <= startTime) continue;
+        var hit = false;
+        var pass = false;
+        //iterate over cronTimes
+        for (i = 0; i < this.cronTimes.length; ++i) {
+          //continue if already hit
+          if (this.cronTimes[i].type === '+' && hit) continue;
+          //test if the time matches the rule
+          if (this.cronTimes[i].cronTime.valid(next)) {
+            if (this.cronTimes[i].type === '+') {
+              //this time matches one whitelist rule
+              hit = true;
+            } else if (cronTime.type === '-') {
+              //this time is in blacklist
+              pass = true;
+              //even one blacklist should render the timeslot unavailable
+              break;
+            }
+          }
+        }
+        if (hit && !pass) {
+          //this is the time we are looking for
+          return next;
+        }
+      }
+      //search is done, but nothing found
+      return null;
     },
     enumerate: function enumerate(startTime, stopTime) {
+      var nextTimes = [],
+          next;
+      while (next = this.nextTick(startTime, stopTime)) {
+        nextTimes.push(next);
+        startTime = next;
+      }
+      return nextTimes;
     },
 };
 
@@ -231,4 +291,8 @@ CronJob.prototype = {
 module.exports = {
     CronTime: CronTime,
     CronJob: CronJob,
+    TimeGroup: TimeGroup,
+    exampleRules: exampleRules,
+    exampleStart: exampleStart,
+    exampleStop: exampleStop,
 }

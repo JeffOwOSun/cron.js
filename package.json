@@ -1,0 +1,29 @@
+{
+  "name": "cron.js",
+  "version": "1.0.0",
+  "description": "Usage:",
+  "main": "cron.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://JeffOwOSun@github.com/JeffOwOSun/cron.js.git"
+  },
+  "author": [
+    "James Padolsey",
+    "Yushi Sun"
+  ],
+  "license": [
+    "GPL",
+    "MIT"
+  ],
+  "bugs": {
+    "url": "https://github.com/JeffOwOSun/cron.js/issues"
+  },
+  "homepage": "https://github.com/JeffOwOSun/cron.js#readme",
+  "dependencies": {
+    "moment": "^2.14.1",
+    "moment-timezone": "^0.5.5"
+  }
+}
