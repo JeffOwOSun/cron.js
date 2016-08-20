@@ -46,7 +46,7 @@ var exampleRules = [
   { rule: '* * * * * 5', 'type': '-' }, //thursday rest
 ]
 var exampleStart = new Date();
-var exampleStop = new Date(exampleStart.getTime()+5*24*3600*1000);
+var exampleStop = new Date(exampleStart.getTime()+7*24*3600*1000);
 function TimeGroup(rules) {
     if (!(this instanceof TimeGroup)) {
         return new TimeGroup(rules);
@@ -81,7 +81,7 @@ TimeGroup.prototype = {
             if (this.cronTimes[i].type === '+') {
               //this time matches one whitelist rule
               hit = true;
-            } else if (cronTime.type === '-') {
+            } else if (this.cronTimes[i].type === '-') {
               //this time is in blacklist
               pass = true;
               //even one blacklist should render the timeslot unavailable
