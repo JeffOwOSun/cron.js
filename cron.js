@@ -21,7 +21,7 @@ var CronJob = (function(){
         this.source = time;
         
         this.map = ['second', 'minute', 'hour', 'dayOfMonth', 'month', 'dayOfWeek'];
-        this.constraints = [[0,59],[0,59],[0,23],[1,31],[0,11],[1,7]];
+        this.constraints = [[0,59],[0,59],[0,23],[1,31],[0,11],[0,6]];
         this.aliases = {
             jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12,
             sun:0,mon:1,tue:2,wed:3,thu:4,fri:5,sat:6
@@ -171,4 +171,4 @@ var CronJob = (function(){
     
     return CronJob;
     
-})();
+})();
