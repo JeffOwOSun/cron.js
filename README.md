@@ -14,7 +14,7 @@ Available Cron patterns:
 
 Another example:
 
-    new CronJob('00 30 11 * * 2-6', function(){
+    new CronJob('00 30 11 * * 1-5', function(){
         // Runs every weekday (Monday through Friday)
         // at 11:30:00 AM. It does not run on Saturday
         // or Sunday.
